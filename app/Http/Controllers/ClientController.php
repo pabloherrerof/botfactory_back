@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\CategoryType;
 use App\Models\Client;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
@@ -14,8 +15,12 @@ class ClientController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        $clients = Client::paginate(10); 
+    {   
+
+        $userId = auth()->user();
+        $user = User::find($userId);
+
+        $clients = $user->clients()->paginate(10);
 
         return response()->json($clients);
     }
