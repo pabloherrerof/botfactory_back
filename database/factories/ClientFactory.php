@@ -24,6 +24,7 @@ class ClientFactory extends Factory
             'active' => $this->faker->boolean(),
             'category' => $this->faker->randomElement(['A', 'B', 'C']),
             'photo' => $this->faker->imageUrl(640, 480, 'people', true),
+            'user_id' => \App\Models\User::inRandomOrder()->first()->id,
         ];
     }
 }

@@ -16,7 +16,13 @@ class Client extends Model
         'population',
         'active',
         'category',
-        'photo' 
+        'photo',
+        'user_id'
     ];
-    
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }
