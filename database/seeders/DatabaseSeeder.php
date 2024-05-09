@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'User 3',
             'email' => 'user3@botfactory.com',
             'password' => Hash::make("password3"),
-        ]);
+        ]); 
 
         Client::factory()->count(40)->create();
     }
