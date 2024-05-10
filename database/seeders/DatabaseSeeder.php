@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
 use App\Models\Client;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -15,9 +16,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        
 
-        User::factory()->create([
+
+       User::factory()->create([
             'name' => 'User 1',
             'email' => 'user1@botfactory.com',
             'password' => Hash::make("password1"),
@@ -33,7 +34,19 @@ class DatabaseSeeder extends Seeder
             'name' => 'User 3',
             'email' => 'user3@botfactory.com',
             'password' => Hash::make("password3"),
-        ]); 
+        ]);
+
+        Category::create([
+            'name' => 'A',
+        ]);
+
+        Category::create([
+            'name' => 'B',
+        ]);
+
+        Category::create([
+            'name' => 'C',
+        ]);
 
         Client::factory()->count(40)->create();
     }

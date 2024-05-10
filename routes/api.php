@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ClientController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -16,5 +17,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/{client}', [ClientController::class, 'show'])->name('clients.show');
         Route::put('/{client}', [ClientController::class, 'update'])->name('clients.update');
         Route::delete('/{client}', [ClientController::class, 'destroy'])->name('clients.destroy');
+    });
+});
+
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::prefix('categories')->group(function () {
+        Route::get('/', [CategoryController::class, 'index'])->name('clients.index');
     });
 });
