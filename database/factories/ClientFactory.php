@@ -22,8 +22,9 @@ class ClientFactory extends Factory
             'email' => $this->faker->unique()->safeEmail(),
             'population' => $this->faker->city(),
             'active' => $this->faker->boolean(),
-            'category' => \App\Models\Category::inRandomOrder()->first()->name,
-            'photo' => $this->faker->imageUrl(640, 480, 'people', true),
+            'birthday' => $this->faker->date(),
+            'category_id' => \App\Models\Category::inRandomOrder()->first()->id,
+            'photo' => null,
             'user_id' => \App\Models\User::inRandomOrder()->first()->id,
         ];
     }

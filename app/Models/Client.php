@@ -15,14 +15,20 @@ class Client extends Model
         'email',
         'population',
         'active',
-        'category',
+        'category_id',
         'photo',
+        'birthday',
         'user_id'
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 
 }

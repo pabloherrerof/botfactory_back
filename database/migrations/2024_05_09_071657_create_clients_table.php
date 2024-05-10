@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('population');
             $table->boolean('active')->default(true);
-            $table->enum('category', ['A', 'B', 'C']);
+            $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->string('photo')->nullable();
             $table->timestamps();
         });

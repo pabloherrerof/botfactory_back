@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
@@ -47,7 +48,7 @@ class ClientController extends Controller
             }
         }
 
-        $clients = $query->paginate(10);
+        $clients = $query->orderBy('created_at', 'desc')->paginate(10);
         return response()->json($clients);
     }
 
@@ -56,9 +57,18 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
+
         $validatedData = $request->validate([
-            // validation rules
+            'name' => 'required|string|max:255',
+            'surname' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:clients,email',
+            'population' => 'required|string|max:255',
+            'active' => 'required|boolean',
+            'category_id' => 'required|numeric|exists:categories,id',
+            'birthday' => 'nullable|date',
         ]);
+        
+        $validatedData['user_id'] = Auth::id();
 
         try {
             $client = new Client($validatedData);
@@ -73,6 +83,7 @@ class ClientController extends Controller
         } catch (\Exception $e) {
             return response()->json(['message' => 'Failed to create client: ' . $e->getMessage()], 500);
         }
+
     }
 
 
@@ -90,10 +101,15 @@ class ClientController extends Controller
     public function update(Request $request, Client $client)
     {
         $validatedData = $request->validate([
-            // validation rules
+            'name' => 'required|string|max:255',
+            'surname' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'population' => 'required|string|max:255',
+            'active' => 'required|boolean',
+            'category_id' => 'required|numeric|exists:categories,id',
+            'birthday' => 'nullable|date',
         ]);
-
-        try {
+       try {
             $client->fill($validatedData);
 
             if ($request->hasFile('photo')) {
