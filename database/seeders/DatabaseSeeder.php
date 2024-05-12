@@ -48,6 +48,6 @@ class DatabaseSeeder extends Seeder
             'name' => 'C',
         ]);
 
-        Client::factory()->count(40)->create();
+        Client::factory()->count(200)->create();
     }
 }

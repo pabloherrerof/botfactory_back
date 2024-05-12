@@ -26,29 +26,32 @@ class ClientController extends Controller
         $query = Client::where('user_id', Auth::id());
 
         foreach ($request->all() as $key => $value) {
-            if (!empty($value) && in_array($key, ['name', 'surname', 'population', 'category', 'age', 'active'])) {
+            if (isset($value) && $value !== '') {
                 switch ($key) {
-                    case 'age':
+                    case 'category_id':
                     case 'active':
-                        if (is_array($value)) {
-                            if (isset($value['gte'])) {
-                                $query->where($key, '>=', $value['gte']);
-                            }
-                            if (isset($value['lte'])) {
-                                $query->where($key, '<=', $value['lte']);
-                            }
-                        } else {
-                            $query->where($key, $value);
-                        }
+                        $query->where($key, $value);
                         break;
-                    default:
-                        $query->where($key, 'like', "%{$value}%");
+                    case 'bigger_than': 
+                        $date = now()->subYears($value);
+                        $query->where('birthday', '<=', $date);
+                        break;
+                    case 'smaller_than': 
+                        $date = now()->subYears($value);
+                        $query->where('birthday', '>=', $date);
+                        break;
+                    case 'search': 
+                        $query->where(function ($query) use ($value) {
+                            $query->where('name', 'like', "%{$value}%")
+                                  ->orWhere('surname', 'like', "%{$value}%")
+                                  ->orWhere('email', 'like', "%{$value}%")
+                                  ->orWhere('population', 'like', "%{$value}%");
+                        });
                         break;
                 }
             }
         }
-
-        $clients = $query->orderBy('created_at', 'desc')->paginate(10);
+        $clients = $query->orderBy('id', 'desc')->paginate(10);
         return response()->json($clients);
     }
 
@@ -74,8 +77,10 @@ class ClientController extends Controller
             $client = new Client($validatedData);
 
             if ($request->hasFile('photo')) {
-                $path = $request->file('photo')->store('photos', 'public');
-                $client->photo = $path;
+                DB::transaction(function () use ($request, $client) {
+                    $path = $request->file('photo')->store('photos', 'public');
+                    $client->photo = $path;
+                });
             }
 
             $client->save();
